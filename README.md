@@ -1,70 +1,182 @@
-# Getting Started with Create React App
+# Exercise & Drill Manager
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A comprehensive React application for managing training exercises and drills with a user-friendly interface built with Bootstrap.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+### Main Menu
+- Beautiful landing page with two main options: **Add Exercise** and **Add Drill**
+- Responsive navigation bar with easy access to all sections
+- Modern, visually appealing design with gradient backgrounds and hover effects
 
-### `npm start`
+### Exercise Management
+- **Add Exercises** with the following fields:
+  - Exercise Name (text input)
+  - Duration (numeric input in minutes)
+  - Sets (numeric input)
+  - Repetitions (numeric input)
+  - Weight (numeric input in kg)
+- **Form Validation**: All fields are required with appropriate error messages
+- **Exercise List**: Displays all added exercises with badges showing details
+- **Edit Functionality**: Click "Edit" to modify existing exercises inline
+- **Delete Functionality**: Remove exercises with a single click
+- Real-time form validation feedback
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Drill Management
+- **Add Drills** with the following fields:
+  - Drill Type (dropdown with options: Temp 1, Temp 2, Temp 3, Temp 4)
+  - Duration (numeric input in minutes)
+  - Players (multi-select dropdown for selecting multiple players)
+- **Form Validation**: Ensures all fields are filled and at least one player is selected
+- **Drill List**: Displays all added drills with player information
+- **Edit Functionality**: Modify existing drills with inline editing
+- **Delete Functionality**: Remove drills easily
+- Mock player data simulating logged-in users
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Technologies Used
 
-### `npm test`
+- **React 18**: Modern React with Hooks (useState)
+- **Bootstrap 5**: Responsive styling framework
+- **React-Bootstrap**: Bootstrap components for React
+- **React-Icons**: Icon library for UI elements
+- **CSS3**: Custom styling with animations and transitions
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Installation & Setup
 
-### `npm run build`
+1. Navigate to the project directory:
+   ```bash
+   cd exercise-drill-manager
+   ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+2. Install dependencies (if not already installed):
+   ```bash
+   npm install
+   ```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+3. Start the development server:
+   ```bash
+   npm start
+   ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+4. Open your browser and visit:
+   ```
+   http://localhost:3000
+   ```
 
-### `npm run eject`
+## Project Structure
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```
+exercise-drill-manager/
+├── public/
+├── src/
+│   ├── components/
+│   │   ├── AddExercise.js    # Exercise management component
+│   │   └── AddDrill.js        # Drill management component
+│   ├── App.js                 # Main application component
+│   ├── App.css                # Custom styling
+│   └── index.js               # Entry point
+├── package.json
+└── README.md
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Component Details
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### AddExercise Component
+- Manages exercise state with React Hooks
+- Implements comprehensive form validation
+- Provides CRUD operations (Create, Read, Update, Delete)
+- Uses Bootstrap cards and forms for UI
+- Shows real-time validation feedback
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### AddDrill Component
+- Manages drill state with React Hooks
+- Implements dropdown and multi-select functionality
+- Includes mock player data (8 sample players)
+- Provides CRUD operations for drills
+- Displays selected players as badges
 
-## Learn More
+### App Component
+- Main navigation and routing logic
+- View state management (menu, exercise, drill)
+- Responsive navbar with Bootstrap
+- Footer section
+- Renders appropriate component based on selected view
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Features in Detail
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Form Validation
+- **Exercise Form**:
+  - Name: Required, non-empty string
+  - Duration: Required, must be greater than 0
+  - Sets: Required, must be greater than 0
+  - Repetitions: Required, must be greater than 0
+  - Weight: Required, must be 0 or greater
 
-### Code Splitting
+- **Drill Form**:
+  - Drill Type: Required, must select from dropdown
+  - Duration: Required, must be greater than 0
+  - Players: Required, at least one player must be selected
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### UI/UX Features
+- Smooth animations and transitions
+- Hover effects on cards and buttons
+- Color-coded badges for different data types
+- Responsive design for mobile and desktop
+- Clear visual feedback for form errors
+- Loading states and user confirmations
 
-### Analyzing the Bundle Size
+## Customization
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### Adding More Drill Types
+Edit `AddDrill.js` and modify the `drillTypes` array:
+```javascript
+const drillTypes = ['Temp 1', 'Temp 2', 'Temp 3', 'Temp 4', 'New Type'];
+```
 
-### Making a Progressive Web App
+### Adding More Players
+Edit `AddDrill.js` and modify the `availablePlayers` array:
+```javascript
+const availablePlayers = [
+  { id: 1, name: 'John Doe' },
+  { id: 2, name: 'Jane Smith' },
+  // Add more players here
+];
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### Customizing Styles
+- Modify `App.css` for global styles
+- Edit Bootstrap variant props in components for color schemes
+- Adjust gradient backgrounds in CSS
 
-### Advanced Configuration
+## Future Enhancements
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Potential features for future development:
+- Local storage persistence for exercises and drills
+- Backend integration with REST API
+- User authentication and authorization
+- Export data to CSV/PDF
+- Advanced filtering and search functionality
+- Statistics and analytics dashboard
+- Calendar view for scheduled drills
+- Team management features
+- Progress tracking over time
 
-### Deployment
+## Browser Support
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
 
-### `npm run build` fails to minify
+## License
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This project is open source and available for personal and educational use.
+
+## Author
+
+Built with ❤️ using React and Bootstrap
+
+---
+
+For any questions or support, please create an issue in the repository.
+

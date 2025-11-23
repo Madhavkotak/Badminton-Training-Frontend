@@ -1,38 +1,906 @@
+/* ========== Root Variables ========== */
+:root {
+  --primary-color: #0d6efd;
+  --success-color: #198754;
+  --danger-color: #dc3545;
+  --warning-color: #ffc107;
+  --info-color: #0dcaf0;
+  --dark-color: #212529;
+  --light-color: #f8f9fa;
+}
+
+/* ========== Light Theme ========== */
+body[data-theme="light"] {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --text-primary: #212529;
+  --text-secondary: #6c757d;
+  --border-color: #dee2e6;
+  --card-bg: #ffffff;
+  --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --hover-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* ========== Dark Theme ========== */
+body[data-theme="dark"] {
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2d2d2d;
+  --bg-gradient: linear-gradient(135deg, #434343 0%, #000000 100%);
+  --text-primary: #ffffff;
+  --text-secondary: #b0b0b0;
+  --border-color: #404040;
+  --card-bg: #2d2d2d;
+  --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+  --hover-shadow: 0 8px 16px rgba(0, 0, 0, 0.7);
+}
+
+/* ========== Base Styles ========== */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 .App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: var(--bg-gradient);
+}
+
+.main-content {
+  flex: 1;
+  padding-bottom: 2rem;
+}
+
+/* ========== Login Styles ========== */
+.login-container {
+  background: var(--bg-gradient);
+  min-height: 100vh;
+}
+
+.login-card {
+  max-width: 500px;
+  width: 100%;
+  background: var(--card-bg);
+  border-radius: 20px;
+  animation: slideUp 0.5s ease;
+}
+
+.login-icon {
+  animation: bounce 2s infinite;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* ========== Card Styles ========== */
+.card {
+  background: var(--card-bg);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 15px;
+  box-shadow: var(--card-shadow);
+  transition: all 0.3s ease;
+}
+
+.card-header {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-color);
+  font-weight: 600;
+}
+
+/* ========== Schedule Card ========== */
+.schedule-card {
+  transition: all 0.3s ease;
+  cursor: pointer;
+  background: var(--card-bg);
+  border: 2px solid transparent;
+}
+
+.schedule-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--hover-shadow);
+  border-color: var(--primary-color);
+}
+
+.schedule-card.today-card {
+  border: 2px solid var(--success-color);
+  background: linear-gradient(135deg, var(--card-bg) 0%, rgba(25, 135, 84, 0.1) 100%);
+}
+
+.schedule-icon {
+  font-size: 3rem;
+  transition: transform 0.3s ease;
+}
+
+.schedule-card:hover .schedule-icon {
+  transform: scale(1.2) rotate(10deg);
+}
+
+/* ========== Exercise Select Card ========== */
+.exercise-select-card {
+  transition: all 0.3s ease;
+  border: 2px solid var(--border-color);
+  background: var(--card-bg);
+}
+
+.exercise-select-card:hover {
+  border-color: var(--primary-color);
+  box-shadow: var(--hover-shadow);
+}
+
+.exercise-select-card.selected {
+  border-color: var(--success-color);
+  background: rgba(25, 135, 84, 0.1);
+}
+
+/* ========== Stats Card ========== */
+.stats-card {
+  border: none;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.stats-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--hover-shadow);
+}
+
+/* ========== Form Styles ========== */
+.form-control,
+.form-select {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  border: 2px solid var(--border-color);
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+.form-control::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+.form-label {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.form-text {
+  color: var(--text-secondary);
+}
+
+.input-group-text {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 2px solid var(--border-color);
+}
+
+.form-check-input {
+  cursor: pointer;
+  background-color: var(--bg-primary);
+  border: 2px solid var(--border-color);
+}
+
+.form-check-input:checked {
+  background-color: var(--success-color);
+  border-color: var(--success-color);
+}
+
+.form-check-label {
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+/* ========== Button Styles ========== */
+.btn {
+  font-weight: 500;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+/* ========== Badge Styles ========== */
+.badge {
+  font-size: 0.85rem;
+  padding: 0.5rem 0.75rem;
+  font-weight: 500;
+  border-radius: 8px;
+}
+
+/* ========== List Styles ========== */
+.list-group-item {
+  background: var(--card-bg);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  transition: background-color 0.3s ease;
+}
+
+.list-group-item:hover {
+  background: var(--bg-secondary);
+}
+
+/* ========== Navbar Styles ========== */
+.navbar {
+  background: var(--card-bg) !important;
+  border-bottom: 1px solid var(--border-color);
+  backdrop-filter: blur(10px);
+}
+
+.navbar-brand {
+  font-weight: 600;
+  font-size: 1.3rem;
+  display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  transition: transform 0.3s ease;
+}
+
+.navbar-brand:hover {
+  transform: scale(1.05);
+}
+
+.nav-link {
+  font-weight: 500;
+  transition: all 0.3s ease;
+  color: var(--text-primary) !important;
+}
+
+.nav-link:hover {
+  color: var(--primary-color) !important;
+  transform: translateY(-2px);
+}
+
+/* ========== Alert Styles ========== */
+.alert {
+  border-radius: 12px;
+  border: none;
+  animation: slideDown 0.5s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========== Match Detail ========== */
+.match-detail {
+  padding: 0.5rem 0;
+}
+
+/* ========== Footer ========== */
+footer {
+  margin-top: auto;
+  background: var(--card-bg) !important;
+  border-top: 1px solid var(--border-color);
+}
+
+/* ========== Responsive Design ========== */
+@media (max-width: 768px) {
+  .login-card {
+    margin: 1rem;
+  }
+
+  .schedule-icon {
+    font-size: 2.5rem;
+  }
+
+  .navbar-brand {
+    font-size: 1.1rem;
+  }
+
+  .card-body {
+    padding: 1rem !important;
+  }
+
+  h1, h2, h3 {
+    font-size: 1.5rem !important;
+  }
+
+  .btn-lg {
+    padding: 0.75rem 1rem;
+  }
+
+  .stats-card h3 {
+    font-size: 1.5rem;
+  }
+
+  .navbar-collapse {
+    background: var(--card-bg);
+    padding: 1rem;
+    margin-top: 1rem;
+    border-radius: 10px;
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  .schedule-card .card-body {
+    padding: 1.5rem !important;
+  }
+
+  .exercise-select-card .card-body {
+    padding: 0.75rem !important;
+  }
+}
+
+/* ========== Animations ========== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card {
+  animation: fadeIn 0.5s ease;
+}
+
+/* ========== Smooth Transitions ========== */
+* {
+  transition-property: background-color, color, border-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+}
+
+button, a, .card {
+  transition-property: all;
+}
+
+/* ========== Custom Scrollbar ========== */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* ========== Print Styles ========== */
+@media print {
+  .navbar,
+  footer,
+  .btn,
+  button {
+    display: none !important;
+  }
+
+  .card {
+    box-shadow: none !important;
+    border: 1px solid #000 !important;
+  }
+}
+
+/* ========== Accessibility ========== */
+.btn:focus,
+.form-control:focus,
+.form-select:focus {
+  outline: 3px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* ========== Loading States ========== */
+.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* ========== Success State ========== */
+.text-decoration-line-through {
+  opacity: 0.6;
+}
+
+/* ========== Hover Effects ========== */
+.hover-card:hover {
+  transform: translateY(-10px);
+  box-shadow: var(--hover-shadow);
+}
+
+/* ========== Theme Toggle Animation ========== */
+body {
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+.btn svg {
+  transition: transform 0.3s ease;
+}
+
+.btn:hover svg {
+  transform: rotate(20deg);
+}
+
+/* ========== Empty State ========== */
+.alert-info {
+  background: rgba(13, 202, 240, 0.1);
+  color: var(--text-primary);
+}
+
+/* ========== Dark Mode Specific Adjustments ========== */
+body[data-theme="dark"] .bg-light {
+  background-color: var(--bg-secondary) !important;
+}
+
+body[data-theme="dark"] .text-muted {
+  color: var(--text-secondary) !important;
+}
+
+body[data-theme="dark"] .border {
+  border-color: var(--border-color) !important;
+}
+
+/* ========== Session Type Cards ========== */
+.session-type-card {
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  background: var(--card-bg);
+}
+
+.session-type-card:hover {
+  border-color: var(--primary-color);
+  box-shadow: var(--hover-shadow);
+  transform: translateY(-3px);
+}
+
+.session-type-card.selected {
+  border-color: var(--success-color);
+  background: rgba(25, 135, 84, 0.15);
+  box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.2);
+}
+
+.session-type-card strong {
+  color: var(--text-primary);
+}
+
+/* ========== Dark Mode Text Visibility ========== */
+body[data-theme="dark"] .session-title,
+body[data-theme="dark"] .exercise-name,
+body[data-theme="dark"] .fitness-title,
+body[data-theme="dark"] .drill-badge,
+body[data-theme="dark"] .exercise-badge,
+body[data-theme="dark"] .exercise-details,
+body[data-theme="dark"] .player-names {
+  color: var(--text-primary) !important;
+}
+
+body[data-theme="dark"] .form-check-label {
+  color: var(--text-primary);
+}
+
+body[data-theme="dark"] .form-check-label strong {
+  color: var(--text-primary) !important;
+}
+
+body[data-theme="dark"] option {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+body[data-theme="dark"] .form-select option {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+/* ========== Modal Dark Mode ========== */
+body[data-theme="dark"] .modal-content {
+  background: var(--card-bg);
+  color: var(--text-primary);
+}
+
+body[data-theme="dark"] .modal-header {
+  border-bottom-color: var(--border-color);
+}
+
+body[data-theme="dark"] .modal-footer {
+  border-top-color: var(--border-color);
+}
+
+body[data-theme="dark"] .modal-title {
+  color: var(--text-primary);
+}
+
+body[data-theme="dark"] .close {
+  color: var(--text-primary);
+}
+
+/* ========== Badge Dark Mode Visibility ========== */
+body[data-theme="dark"] .badge {
+  color: #ffffff;
+}
+
+body[data-theme="dark"] .badge.bg-secondary {
+  background-color: #6c757d !important;
+  color: #ffffff !important;
+}
+
+/* ========== Match Details Dark Mode ========== */
+body[data-theme="dark"] .match-detail {
+  color: var(--text-primary);
+}
+
+body[data-theme="dark"] .match-detail strong {
+  color: var(--text-primary);
+}
+
+/* ========== Calendar Styles ========== */
+.react-calendar {
+  width: 100% !important;
+  max-width: 100%;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-family: inherit;
+  padding: 1rem;
+}
+
+.react-calendar__navigation {
+  display: flex;
+  margin-bottom: 1rem;
+  height: 44px;
+}
+
+.react-calendar__navigation button {
+  min-width: 44px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.react-calendar__navigation button:hover {
+  background: var(--primary-color);
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.react-calendar__navigation button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.react-calendar__month-view__weekdays {
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.react-calendar__month-view__weekdays__weekday {
+  padding: 0.5rem;
+}
+
+.react-calendar__month-view__days__day {
+  color: var(--text-primary);
+  background: var(--card-bg);
+  border-radius: 6px;
+  padding: 0.75rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  position: relative;
+  min-height: 60px;
+}
+
+.react-calendar__tile {
+  border: 1px solid transparent;
+}
+
+.react-calendar__tile:hover {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+}
+
+.react-calendar__tile--now {
+  background: rgba(13, 110, 253, 0.1);
+  border-color: var(--primary-color);
+}
+
+.react-calendar__tile--active {
+  background: var(--primary-color) !important;
+  color: white !important;
+}
+
+.react-calendar__tile--active:hover {
+  background: var(--primary-color) !important;
+}
+
+.react-calendar__month-view__days__day--neighboringMonth {
+  color: var(--text-secondary);
+  opacity: 0.5;
+}
+
+/* Calendar session indicator */
+.react-calendar__tile.has-sessions {
+  border: 2px solid var(--success-color);
+  background: rgba(25, 135, 84, 0.1);
+}
+
+.react-calendar__tile.has-sessions:hover {
+  background: rgba(25, 135, 84, 0.2);
+}
+
+.calendar-session-count {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: var(--success-color);
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.calendar-wrapper {
+  background: var(--card-bg);
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: var(--card-shadow);
+  min-height: 350px;
+  display: block;
+  visibility: visible;
+}
+
+.calendar-wrapper .react-calendar {
+  width: 100%;
+  max-width: 100%;
+  background: transparent;
+  border: none;
+  font-family: inherit;
+}
+
+.calendar-wrapper .react-calendar button {
+  font-size: 0.9rem;
+  padding: 0.5rem;
+}
+
+.calendar-wrapper .react-calendar__tile {
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ensure calendar text is visible */
+.react-calendar__navigation button {
+  color: var(--text-primary) !important;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.react-calendar__month-view__weekdays {
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.react-calendar__month-view__days__day {
+  color: var(--text-primary) !important;
+}
+
+.react-calendar__tile--now {
+  background: rgba(13, 110, 253, 0.1);
+  font-weight: bold;
+}
+
+.react-calendar__tile--active {
+  background: #0d6efd !important;
+  color: white !important;
+}
+
+.react-calendar__tile--active:enabled:hover,
+.react-calendar__tile--active:enabled:focus {
+  background: #0b5ed7 !important;
+}
+
+.react-calendar__tile:disabled {
+  background-color: var(--bg-secondary);
+  color: var(--text-secondary) !important;
+  opacity: 0.4;
+}
+
+.react-calendar__tile--hasActive {
+  background: #0d6efd;
+}
+
+/* Session detail panel */
+.calendar-session-detail {
+  background: var(--card-bg);
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: var(--card-shadow);
+}
+
+.calendar-session-item {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  transition: all 0.2s ease;
+}
+
+.calendar-session-item:hover {
+  box-shadow: var(--hover-shadow);
+  transform: translateY(-2px);
+}
+
+/* Dark mode adjustments for calendar */
+body[data-theme="dark"] .react-calendar {
+  background: var(--card-bg);
+  border-color: var(--border-color);
+}
+
+body[data-theme="dark"] .react-calendar__navigation button {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+body[data-theme="dark"] .react-calendar__month-view__days__day {
+  color: var(--text-primary);
+}
+
+body[data-theme="dark"] .react-calendar__tile--now {
+  background: rgba(13, 110, 253, 0.2);
+}
+
+body[data-theme="dark"] .calendar-session-item {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+}
+
+/* ========== Comprehensive Dark Mode Text Fixes ========== */
+body[data-theme="dark"] h1,
+body[data-theme="dark"] h2,
+body[data-theme="dark"] h3,
+body[data-theme="dark"] h4,
+body[data-theme="dark"] h5,
+body[data-theme="dark"] h6,
+body[data-theme="dark"] p,
+body[data-theme="dark"] span,
+body[data-theme="dark"] div {
+  color: var(--text-primary);
+}
+
+body[data-theme="dark"] .form-label,
+body[data-theme="dark"] .form-check-label,
+body[data-theme="dark"] .fw-bold {
+  color: var(--text-primary) !important;
+}
+
+body[data-theme="dark"] small,
+body[data-theme="dark"] .small,
+body[data-theme="dark"] .text-muted {
+  color: var(--text-secondary) !important;
+}
+
+body[data-theme="dark"] .form-control,
+body[data-theme="dark"] .form-select {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+body[data-theme="dark"] .form-control::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.8;
+}
+
+body[data-theme="dark"] .input-group-text {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+body[data-theme="dark"] .lead {
+  color: var(--text-primary);
+}
+
+body[data-theme="dark"] .card-title,
+body[data-theme="dark"] .card-text {
+  color: var(--text-primary);
+}
+
+/* Ensure buttons maintain proper contrast */
+body[data-theme="dark"] .btn-outline-primary,
+body[data-theme="dark"] .btn-outline-success,
+body[data-theme="dark"] .btn-outline-danger {
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+body[data-theme="dark"] .btn-outline-primary:hover {
+  color: white;
+}
+
+/* List group dark mode */
+body[data-theme="dark"] .list-group-item strong {
+  color: var(--text-primary);
+}
+
+/* Session and exercise cards */
+body[data-theme="dark"] .exercise-select-card .card-body,
+body[data-theme="dark"] .session-type-card .card-body {
+  color: var(--text-primary);
+}
+
+body[data-theme="dark"] .exercise-select-card h6,
+body[data-theme="dark"] .exercise-select-card p {
+  color: var(--text-primary);
 }
