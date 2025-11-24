@@ -152,11 +152,13 @@ export const drillsAPI = {
 
   // Get single drill
   getDrill: async (id) => {
+    console.log('Fetching drill with id:', id);
     return await apiRequest(`/drills/${id}`, 'GET', null, false);
   },
 
   // Get drill types
   getDrillTypes: async () => {
+    console.log('Fetching drill types');
     return await apiRequest('/drills/types', 'GET', null, false);
   },
 

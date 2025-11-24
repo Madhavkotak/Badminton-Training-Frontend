@@ -376,6 +376,31 @@ footer {
   }
 }
 
+/* Calendar adjustments for narrow / portrait screens */
+@media (max-width: 480px) {
+  .calendar-wrapper {
+    padding: 0.75rem;
+    min-height: 260px;
+  }
+
+  .calendar-wrapper .react-calendar__tile {
+    min-height: 40px;
+    padding: 0.25rem;
+    font-size: 0.75rem;
+  }
+
+  .calendar-wrapper .react-calendar__navigation button {
+    font-size: 0.9rem;
+    padding: 0.35rem;
+  }
+
+  /* allow calendar to scroll horizontally if needed on very narrow screens */
+  .calendar-wrapper .react-calendar {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
 /* ========== Animations ========== */
 @keyframes fadeIn {
   from {
@@ -702,6 +727,34 @@ body[data-theme="dark"] .match-detail strong {
   justify-content: center;
   font-size: 0.7rem;
   font-weight: 700;
+}
+
+/* Support the existing class used in calendar tile rendering (.session-count) */
+.calendar-session-indicator .session-count,
+.session-count {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: var(--success-color);
+  color: white;
+  border-radius: 12px;
+  min-width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px;
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+
+/* Hide session-count badges on very narrow/portrait screens to avoid layout issues */
+@media (max-width: 480px) {
+  .calendar-session-indicator .session-count,
+  .session-count,
+  .calendar-session-count {
+    display: none !important;
+  }
 }
 
 .calendar-wrapper {

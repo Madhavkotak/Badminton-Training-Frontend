@@ -188,10 +188,16 @@ const TrainingCalendar = ({ onBack, onEditSession }) => {
 
                               {session.drillType && (
                                 <div className="mb-2">
-                                  <Badge bg="primary" className="me-2 drill-badge">
+                                  <Badge
+                                    bg="primary"
+                                    className="me-2 drill-badge"
+                                    title={`Drill: ${session.drillType}`}
+                                  >
                                     {session.drillType}
                                   </Badge>
-                                  <Badge bg="info">{session.duration} min</Badge>
+                                  <Badge bg="info" title={`Duration: ${session.duration} min`}>
+                                    {session.duration} min
+                                  </Badge>
                                   {session.players && session.players.length > 0 && (
                                     <div className="mt-2">
                                       <small className="text-muted player-names">
@@ -210,7 +216,7 @@ const TrainingCalendar = ({ onBack, onEditSession }) => {
                                     Fitness:
                                   </small>
                                   {session.exercises.map((ex, idx) => (
-                                    <div key={idx} className="mb-1 ms-3">
+                                    <div key={idx} className="mb-1 ms-3" title={`${ex.name} — ${ex.sets}×${ex.reps}${ex.weights ? ` • ${ex.weights}kg` : ''}${ex.duration ? ` • ${ex.duration} min` : ''}`}>
                                       <Badge bg="secondary" className="me-2 exercise-badge">
                                         {ex.name}
                                       </Badge>

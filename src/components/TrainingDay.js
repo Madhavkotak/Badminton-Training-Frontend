@@ -23,19 +23,32 @@ const TrainingDay = ({ selectedDay, onBack, sessionToEdit }) => {
   const { user } = useAuth();
   const schedule = TRAINING_SCHEDULE[selectedDay];
   
-  // Helper function to get a valid training date (not Sunday)
-  const getValidTrainingDate = () => {
+  // Helper: get most recent date for the given training day (never in future)
+  const getDefaultDateForSelectedDay = (dayName) => {
     const today = new Date();
-    const dayOfWeek = today.getDay();
-    
-    // If today is Sunday (0), default to tomorrow (Monday)
-    if (dayOfWeek === 0) {
-      const tomorrow = new Date(today);
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      return format(tomorrow, 'yyyy-MM-dd');
+    const dayNameToNumber = {
+      'Sunday': 0,
+      'Monday': 1,
+      'Tuesday': 2,
+      'Wednesday': 3,
+      'Thursday': 4,
+      'Friday': 5,
+      'Saturday': 6
+    };
+    const target = dayNameToNumber[dayName];
+
+    // If the selected section day matches today, use today
+    if (today.getDay() === target) {
+      return format(today, 'yyyy-MM-dd');
     }
-    
-    return format(today, 'yyyy-MM-dd');
+
+    // Otherwise, walk backwards to find the most recent occurrence of that weekday
+    const d = new Date(today);
+    // ensure we don't return a future date
+    while (d.getDay() !== target) {
+      d.setDate(d.getDate() - 1);
+    }
+    return format(d, 'yyyy-MM-dd');
   };
   
   // Data from backend
@@ -46,7 +59,7 @@ const TrainingDay = ({ selectedDay, onBack, sessionToEdit }) => {
   const [loading, setLoading] = useState(false);
   const [dataLoading, setDataLoading] = useState(true);
 
-  const [selectedDate, setSelectedDate] = useState(getValidTrainingDate());
+  const [selectedDate, setSelectedDate] = useState(getDefaultDateForSelectedDay(selectedDay));
   const [sessionType, setSessionType] = useState('');
   
   // Handler for date change with validation
@@ -71,6 +84,16 @@ const TrainingDay = ({ selectedDay, onBack, sessionToEdit }) => {
     // Prevent Sunday (0) selection
     if (dayOfWeek === 0) {
       alert('Sundays are rest days and cannot be selected for training sessions.');
+      return;
+    }
+
+    // Prevent selecting a future date
+    const today = new Date();
+    const selected = new Date(newDate + 'T00:00:00');
+    // zero out time for comparison
+    today.setHours(0,0,0,0);
+    if (selected > today) {
+      alert('Selected date cannot be in the future. Please choose today or an earlier date.');
       return;
     }
     
@@ -117,6 +140,13 @@ const TrainingDay = ({ selectedDay, onBack, sessionToEdit }) => {
     }
   }, [sessionToEdit, exercises, drills]);
 
+  // When the selectedDay (section) changes, update default date (unless user is editing)
+  useEffect(() => {
+    if (!editingSession) {
+      setSelectedDate(getDefaultDateForSelectedDay(selectedDay));
+    }
+  }, [selectedDay]);
+
   const loadInitialData = async () => {
     try {
       setDataLoading(true);
@@ -142,8 +172,6 @@ const TrainingDay = ({ selectedDay, onBack, sessionToEdit }) => {
       setLoading(true);
       const result = await api.sessions.getSessions({
         day: selectedDay,
-        startDate: selectedDate,
-        endDate: selectedDate,
         userName: user?.name || 'Guest'
       });
       console.log("sessions fetched from database",result);
@@ -299,6 +327,17 @@ const TrainingDay = ({ selectedDay, onBack, sessionToEdit }) => {
     console.log("Edited session:", session);
     setEditingSession(session);
     setSessionType(session.sessionType);
+    // Prefer session.date if present - normalize to yyyy-MM-dd
+    try {
+      const rawDate = session.date || session.startDate || session.sessionDate;
+      if (rawDate) {
+        const parsed = rawDate.includes('T') ? new Date(rawDate) : new Date(rawDate + 'T00:00:00');
+        setSelectedDate(format(parsed, 'yyyy-MM-dd'));
+      }
+    } catch (err) {
+      // fallback - keep existing selectedDate
+      console.warn('Failed to parse session date for edit, keeping selectedDate', err);
+    }
     
     if (session.drillType) {
       setDrillType(session.drillType);
@@ -399,14 +438,45 @@ const TrainingDay = ({ selectedDay, onBack, sessionToEdit }) => {
     }));
   };
 
-  const getTodaySessions = () => {
-    console.log("inside getToday Sessions", sessions);
-    console.log("selectedDate", selectedDate);
-    return sessions.filter(s => {
-      const sessionDate = format(new Date(s.date), 'yyyy-MM-dd');
-      console.log("comparing", sessionDate, "with", selectedDate);
-      return sessionDate === selectedDate;
+  // Return all sessions that correspond to the selected weekday (e.g., all Mondays)
+  const getDaySessions = () => {
+    if (!selectedDay) return [];
+    const dayNameToNumber = {
+      'Sunday': 0,
+      'Monday': 1,
+      'Tuesday': 2,
+      'Wednesday': 3,
+      'Thursday': 4,
+      'Friday': 5,
+      'Saturday': 6
+    };
+    const expected = dayNameToNumber[selectedDay];
+    // Helper to parse session.date into a Date object (handles ISO or yyyy-MM-dd)
+    const parseSessionDate = (s) => {
+      try {
+        const raw = s.date || s.sessionDate || s.startDate;
+        if (!raw) return new Date(0);
+        return raw.includes('T') ? new Date(raw) : new Date(raw + 'T00:00:00');
+      } catch (err) {
+        return new Date(0);
+      }
+    };
+
+    const filtered = sessions.filter(s => {
+      try {
+        if (s.day && typeof s.day === 'string') {
+          return s.day === selectedDay;
+        }
+        const d = parseSessionDate(s);
+        return d.getDay() === expected;
+      } catch (err) {
+        return false;
+      }
     });
+
+    // Sort by session date descending (newest first)
+    filtered.sort((a, b) => parseSessionDate(b) - parseSessionDate(a));
+    return filtered;
   };
 
   const renderSessionForm = () => (
@@ -633,7 +703,8 @@ const TrainingDay = ({ selectedDay, onBack, sessionToEdit }) => {
       </Card>
 
       <SessionList
-        sessions={getTodaySessions()}
+        sessions={getDaySessions()}
+        selectedDay={selectedDay}
         selectedDate={selectedDate}
         onEdit={handleEditSession}
         onDelete={handleDeleteSession}
@@ -641,7 +712,19 @@ const TrainingDay = ({ selectedDay, onBack, sessionToEdit }) => {
       />
 
       {/* Edit Modal */}
-      <Modal show={showEditModal} onHide={() => setShowEditModal(false)} size="lg">
+      <Modal
+        show={showEditModal}
+        onHide={() => {
+          setShowEditModal(false);
+          setEditingSession(null);
+          resetForm();
+        }}
+        onExited={() => {
+          // Ensure any modal-related body overflow is cleared
+          try { document.body.style.overflow = ''; } catch (e) { /* ignore */ }
+        }}
+        size="lg"
+      >
         <Modal.Header closeButton>
           <Modal.Title>{MESSAGES.LABELS.EDIT_SESSION}</Modal.Title>
         </Modal.Header>

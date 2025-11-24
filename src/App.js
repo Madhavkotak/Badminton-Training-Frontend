@@ -16,6 +16,7 @@ function AppContent() {
   const [activeView, setActiveView] = useState('schedule');
   const [selectedDay, setSelectedDay] = useState(null);
   const [sessionToEdit, setSessionToEdit] = useState(null);
+  const [navExpanded, setNavExpanded] = useState(false);
   const { theme, toggleTheme } = useTheme();
   const { user, logout } = useAuth();
 
@@ -25,6 +26,14 @@ function AppContent() {
       setActiveView('gameday');
     } else {
       setActiveView('training');
+    }
+    // Close navbar automatically on small/portrait screens for better UX
+    try {
+      if (window && window.innerWidth && window.innerWidth <= 768) {
+        setNavExpanded(false);
+      }
+    } catch (err) {
+      // ignore
     }
   };
 
@@ -47,7 +56,7 @@ function AppContent() {
       case 'training':
         return <TrainingDay selectedDay={selectedDay} onBack={handleBackToSchedule} sessionToEdit={sessionToEdit} />;
       case 'gameday':
-        return <GameDay onBack={handleBackToSchedule} />;
+        return <GameDay selectedDay={selectedDay} onBack={handleBackToSchedule} />;
       case 'calendar':
         return <TrainingCalendar onBack={handleBackToSchedule} onEditSession={handleEditSessionFromCalendar} />;
       case 'analytics':
@@ -60,7 +69,7 @@ function AppContent() {
 
   return (
     <div className="App">
-      <Navbar bg={theme === 'dark' ? 'dark' : 'light'} variant={theme} expand="lg" className="shadow-sm sticky-top">
+      <Navbar bg={theme === 'dark' ? 'dark' : 'light'} variant={theme} expand="lg" expanded={navExpanded} onToggle={(val) => setNavExpanded(val)} className="shadow-sm sticky-top">
         <Container>
           <Navbar.Brand onClick={() => setActiveView('schedule')} style={{ cursor: 'pointer' }}>
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-trophy me-2" viewBox="0 0 16 16">
@@ -71,15 +80,15 @@ function AppContent() {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto align-items-center">
-              <Nav.Link onClick={() => setActiveView('schedule')}>
+              <Nav.Link onClick={() => { setActiveView('schedule'); setNavExpanded(false); }}>
                 <FaCalendar className="me-1" />
                 Schedule
               </Nav.Link>
-              <Nav.Link onClick={() => setActiveView('calendar')}>
+              <Nav.Link onClick={() => { setActiveView('calendar'); setNavExpanded(false); }}>
                 <FaCalendarAlt className="me-1" />
                 Calendar
               </Nav.Link>
-              <Nav.Link onClick={() => setActiveView('analytics')}>
+              <Nav.Link onClick={() => { setActiveView('analytics'); setNavExpanded(false); }}>
                 <FaChartLine className="me-1" />
                 Analytics
               </Nav.Link>

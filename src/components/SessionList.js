@@ -4,7 +4,7 @@ import { FaEdit, FaTrash, FaUsers } from 'react-icons/fa';
 import { format } from 'date-fns';
 import { SESSION_TYPE_OPTIONS } from '../constants';
 
-const SessionList = ({ sessions, selectedDate, onEdit, onDelete, loading }) => {
+const SessionList = ({ sessions, selectedDay, selectedDate, onEdit, onDelete, loading }) => {
   if (loading) {
     return (
       <Card className="shadow-lg border-0">
@@ -23,10 +23,12 @@ const SessionList = ({ sessions, selectedDate, onEdit, onDelete, loading }) => {
     return sessionTypeObj ? sessionTypeObj.label : type;
   };
 
+  const headerTitle = selectedDay ? `All ${selectedDay} Sessions` : `Sessions for ${format(new Date(selectedDate), 'MMMM d, yyyy')}`;
+
   return (
     <Card className="shadow-lg border-0">
       <Card.Header className="bg-success text-white">
-        <h4 className="mb-0">Sessions for {format(new Date(selectedDate), 'MMMM d, yyyy')}</h4>
+        <h4 className="mb-0">{headerTitle}</h4>
       </Card.Header>
       <Card.Body className="p-0">
         <ListGroup variant="flush">
@@ -73,6 +75,19 @@ const SessionList = ({ sessions, selectedDate, onEdit, onDelete, loading }) => {
                   )}
 
                   <small className="text-muted d-block mt-2">
+                    Session Date: {
+                      (() => {
+                        try {
+                          const raw = session.date || session.sessionDate || session.startDate;
+                          const d = raw && raw.includes('T') ? new Date(raw) : new Date((raw || '') + 'T00:00:00');
+                          return format(d, 'MMMM d, yyyy');
+                        } catch (err) {
+                          return 'Unknown';
+                        }
+                      })()
+                    }
+                  </small>
+                  <small className="text-muted d-block mt-1">
                     Added: {new Date(session.createdAt || session.timestamp).toLocaleString()}
                   </small>
                 </div>

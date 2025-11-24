@@ -5,7 +5,7 @@ import { MATCH_TYPES } from '../utils/trainingData';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 
-const GameDay = ({ onBack }) => {
+const GameDay = ({ onBack, selectedDay }) => {
   const { user } = useAuth();
   const [matches, setMatches] = useState([]);
   const [players, setPlayers] = useState([]);
@@ -18,7 +18,7 @@ const GameDay = ({ onBack }) => {
     sets: '',
     setScores: [], // Array to store score for each set
     duration: '',
-    matchDate: new Date().toISOString().split('T')[0], // Default to today
+    matchDate: new Date().toISOString().split('T')[0], // Default to today (may be overridden below)
     notes: '',
   });
   const [errors, setErrors] = useState({});
@@ -29,6 +29,45 @@ const GameDay = ({ onBack }) => {
     loadMatches();
     loadPlayers();
   }, [user]);
+
+  // Helper: get most recent date for the given day name (never future)
+  const getDefaultDateForSelectedDay = (dayName) => {
+    const today = new Date();
+    const dayNameToNumber = {
+      'Sunday': 0,
+      'Monday': 1,
+      'Tuesday': 2,
+      'Wednesday': 3,
+      'Thursday': 4,
+      'Friday': 5,
+      'Saturday': 6
+    };
+    if (!dayName || !dayNameToNumber.hasOwnProperty(dayName)) {
+      return formatDateYYYYMMDD(today);
+    }
+    const target = dayNameToNumber[dayName];
+    if (today.getDay() === target) return formatDateYYYYMMDD(today);
+    const d = new Date(today);
+    while (d.getDay() !== target) d.setDate(d.getDate() - 1);
+    return formatDateYYYYMMDD(d);
+  };
+
+  const formatDateYYYYMMDD = (d) => {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  };
+
+  // When selectedDay prop changes, set default match date accordingly (don't override if user editing)
+  useEffect(() => {
+    if (selectedDay) {
+      setFormData(prev => ({
+        ...prev,
+        matchDate: getDefaultDateForSelectedDay(selectedDay)
+      }));
+    }
+  }, [selectedDay]);
 
   const loadPlayers = async () => {
     try {
@@ -205,6 +244,20 @@ const GameDay = ({ onBack }) => {
         [name]: value,
         setScores: newSetScores
       });
+    } else if (name === 'matchDate') {
+      // Prevent future dates
+      try {
+        const selected = new Date(value + 'T00:00:00');
+        const today = new Date();
+        today.setHours(0,0,0,0);
+        if (selected > today) {
+          alert('Match date cannot be in the future. Please select today or an earlier date.');
+          return;
+        }
+      } catch (err) {
+        // ignore parse errors and allow default handling
+      }
+      setFormData({ ...formData, [name]: value });
     } else {
       setFormData({
         ...formData,

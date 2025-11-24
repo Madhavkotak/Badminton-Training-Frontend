@@ -140,6 +140,19 @@ const ProgressAnalytics = ({ onBack }) => {
 
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82CA9D'];
 
+  // Custom tooltip to show drill details and duration clearly
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (!active || !payload || payload.length === 0) return null;
+    const data = payload[0].payload || {};
+    return (
+      <div className="p-2 bg-white border rounded shadow-sm" style={{ minWidth: 160 }}>
+        <div className="fw-bold">{label}</div>
+        {data.drillType && <div className="small text-muted">Drill: {data.drillType}</div>}
+        <div className="mt-1"><strong>{data.duration !== undefined && data.duration !== null ? `${data.duration} min` : 'Duration: N/A'}</strong></div>
+      </div>
+    );
+  };
+
   if (loading) {
     return (
       <Container className="mt-4 text-center">
@@ -293,7 +306,7 @@ const ProgressAnalytics = ({ onBack }) => {
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="date" />
                         <YAxis label={{ value: 'Duration (min)', angle: -90, position: 'insideLeft' }} />
-                        <Tooltip />
+                        <Tooltip content={CustomTooltip} />
                         <Legend />
                         <Line 
                           type="monotone" 
@@ -333,7 +346,7 @@ const ProgressAnalytics = ({ onBack }) => {
                                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                               ))}
                             </Pie>
-                            <Tooltip />
+                            <Tooltip content={CustomTooltip} />
                           </PieChart>
                         </ResponsiveContainer>
                       </Card.Body>
@@ -356,7 +369,7 @@ const ProgressAnalytics = ({ onBack }) => {
                               <CartesianGrid strokeDasharray="3 3" />
                               <XAxis dataKey="date" />
                               <YAxis />
-                              <Tooltip />
+                              <Tooltip content={CustomTooltip} />
                               <Legend />
                               <Bar dataKey="sessions" fill="#82ca9d" name="Sessions" />
                             </BarChart>
